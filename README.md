@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 4K Vestibulares — Plataforma
 
-## Getting Started
+Plataforma do cursinho pré-vestibular **4K Vestibulares** (Taguatinga/DF): landing page institucional + ambiente do aluno e do professor (em construção). MVP real que também serve de pitch do produto.
 
-First, run the development server:
+## Stack
+
+- **Next.js** (App Router) + **TypeScript** + **Tailwind CSS v4**
+- **Supabase** (Postgres, sa-east-1) — banco e autenticação
+- Tema claro/escuro persistido, mobile-first
+- Identidade visual definida em [`4k_vest/DESIGN.md`](4k_vest/DESIGN.md) — fonte única de verdade (roxo `#600BDA`, verde `#38E358`, obsidian `#0B1215`, Anton + Inter)
+
+## Rodando localmente
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# abre http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> **Nota (OneDrive):** se o projeto estiver numa pasta sincronizada pelo OneDrive, o watcher do dev server pode perder edições. Se a página parecer desatualizada, reinicie o `npm run dev`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Estrutura
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Caminho | O que é |
+|---|---|
+| `app/` | Rotas: landing (`/`), `/login` (stub), `/politica-de-privacidade` |
+| `components/landing/` | Seções da landing (hero, prova social, método, resultados, depoimentos, suporte, footer) |
+| `components/` | Navbar, toggle de tema, Reveal (animação de entrada) |
+| `app/globals.css` | Design tokens (única área com hex permitido) |
+| `4k_vest/DESIGN.md` | Design system — consultar antes de qualquer tela nova |
 
-## Learn More
+## Fases
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [x] **Fase 0** — Seed do banco (Supabase)
+- [x] **Fase 1** — Landing page
+- [ ] **Fase 2** — Login/Cadastro (Supabase Auth)
+- [ ] **Fase 3** — Ambiente do aluno (quiz diário, simulados, radar de desempenho, monitorias, redação)
+- [ ] **Fase 4** — Ambiente do professor (frequência, item analysis, correção de redação)
