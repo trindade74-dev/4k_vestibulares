@@ -145,6 +145,16 @@
   }
 }
 
+/* Escala global: o visual foi aprovado com o navegador a 110%;
+   zoom 1.1 faz o zoom 100% reproduzir exatamente essa aparência.
+   Só a partir de tablet — no mobile a escala real já estava certa
+   (o zoom do navegador de desenvolvimento não se aplicava lá). */
+@media (min-width: 768px) {
+  html {
+    zoom: 1.1;
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--text-primary);
