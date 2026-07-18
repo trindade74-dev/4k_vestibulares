@@ -1,0 +1,576 @@
+@import "tailwindcss";
+
+/* ============================================================
+   TOKENS — fonte única: 4k_vest/DESIGN.md
+   Única área do projeto onde hex é permitido.
+   ============================================================ */
+
+:root,
+[data-theme="light"] {
+  /* Marca (constantes nos dois modos) */
+  --verde-4k: #38e358;
+  --obsidian: #0b1215;
+  --verde-ink: #0b3d18; /* texto sobre verde, sempre */
+  --roxo-profundo: #0e0a16; /* fundo escuro secundário (constante p/ superfícies de destaque) */
+  --text-on-dark: #ffffff; /* texto sobre superfície escura de destaque */
+  --text-on-dark-muted: rgba(244, 241, 251, 0.78);
+  --border-on-dark: rgba(96, 11, 218, 0.35);
+
+  /* Roxo */
+  --roxo-4k: #600bda;
+
+  /* Superfícies */
+  --bg: #f4f1fb;
+  --surface: #ffffff;
+  --surface-alt: #ede7f8;
+  --border: #e0d8f0;
+
+  /* Texto */
+  --text-primary: #0b1215;
+  --text-secondary: #8478a8;
+
+  /* Grid quadriculado (superfícies de destaque, nos dois temas — DESIGN.md
+     regra 3): claro = linha roxo-clara quase rosa; escuro = roxo a 28%.
+     --grid-line-dark é constante, para as superfícies escuras fixas. */
+  --grid-line: #e6cbef;
+  --grid-line-dark: rgba(96, 11, 218, 0.28);
+
+  /* Superfície de destaque theme-aware (seção Resultados, cards de matéria
+     do preview). Pedido do cliente: clara no modo claro, obsidian no
+     escuro. O grid quadriculado aparece nos dois temas, com a linha de
+     cada modo (DESIGN.md regra 3). */
+  --destaque-bg: var(--surface-alt);
+  --destaque-ink: var(--text-primary);
+  --destaque-muted: color-mix(in srgb, var(--text-secondary) 55%, var(--obsidian));
+  --destaque-border: var(--border);
+  --destaque-track: rgba(11, 18, 21, 0.1);
+  --destaque-grid-line: var(--grid-line);
+  --destaque-glow: transparent;
+
+  /* Mesh do hero (gradiente aurora em roxos da marca — verde proibido aqui).
+     Claro: roxos vibrantes/lavanda. */
+  --mesh-base: #5a0fc4;
+  --mesh-a: #8b5cf6; /* violeta */
+  --mesh-b: #4438ca; /* azul-arroxeado (único toque azul) */
+  --mesh-c: #c4b5fd; /* lavanda (longe do texto) */
+  --mesh-d: #3a1785; /* roxo profundo */
+  --mesh-e: #7a2bf0; /* roxo elétrico */
+  --mesh-scrim: rgba(11, 18, 21, 0.32); /* escurece atrás do título p/ contraste */
+  --glass-bg: rgba(255, 255, 255, 0.14);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-hover: rgba(255, 255, 255, 0.22);
+  --on-dark-track: rgba(255, 255, 255, 0.16); /* trilho de barra sobre superfície escura */
+
+  /* Feedback */
+  --acerto-bg: #eafbef;
+  --acerto-border: #38e358;
+  --acerto-text: #0b3d18;
+  --revisar-bg: #f4f1fb;
+  --revisar-border: #600bda;
+  --revisar-text: #3a1785;
+
+  /* Geometria */
+  --radius: 12px;
+
+  /* Fontes (definidas via next/font em layout.tsx) */
+  --font-display: var(--font-anton), sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+[data-theme="dark"] {
+  --roxo-4k: #7f47e0;
+
+  --bg: #0b1215;
+  --surface: #15101f;
+  --surface-alt: #241a3d;
+  --border: #2e2145;
+
+  --text-primary: #ffffff;
+  --text-secondary: #8b7fb5;
+
+  --grid-line: var(--grid-line-dark);
+
+  /* Destaque no escuro: comportamento original (obsidian + grid) */
+  --destaque-bg: var(--obsidian);
+  --destaque-ink: var(--text-on-dark);
+  --destaque-muted: var(--text-on-dark-muted);
+  --destaque-border: var(--border-on-dark);
+  --destaque-track: var(--on-dark-track);
+  --destaque-grid-line: var(--grid-line);
+  --destaque-glow: var(--roxo-profundo);
+
+  --revisar-bg: #241a3d;
+  --revisar-text: #cbb8f5;
+
+  /* Mesh do hero no escuro: roxos profundos sobre obsidian */
+  --mesh-base: #0b1215;
+  --mesh-a: #3a1785;
+  --mesh-b: #2a1a5e;
+  --mesh-c: #600bda;
+  --mesh-d: #1a0f33;
+  --mesh-e: #4c1d95;
+  --mesh-scrim: rgba(11, 18, 21, 0.45);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.22);
+  --glass-hover: rgba(255, 255, 255, 0.16);
+}
+
+@theme inline {
+  --color-verde: var(--verde-4k);
+  --color-verde-ink: var(--verde-ink);
+  --color-obsidian: var(--obsidian);
+  --color-roxo: var(--roxo-4k);
+  --color-roxo-profundo: var(--roxo-profundo);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-border: var(--border);
+  --color-ink: var(--text-primary);
+  --color-muted: var(--text-secondary);
+  --color-on-dark: var(--text-on-dark);
+  --color-on-dark-muted: var(--text-on-dark-muted);
+  --color-destaque-ink: var(--destaque-ink);
+  --color-destaque-muted: var(--destaque-muted);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-sans);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--roxo-4k);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--roxo-4k);
+  color: var(--text-on-dark);
+}
+
+/* Título de impacto: Anton, só caixa alta, frase curta */
+.titulo-impacto {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+  line-height: 1.08;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 100;
+  background: var(--roxo-4k);
+  color: var(--text-on-dark);
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-weight: 500;
+}
+.skip-link:focus-visible {
+  top: 12px;
+}
+
+/* ============================================================
+   GRID QUADRICULADO — superfícies de destaque, nos dois temas
+   (hero, header de destaque, quiz, card de matéria).
+   Claro: linha roxo-clara quase rosa. Escuro: roxo a 28%.
+   ============================================================ */
+
+.grid-surface {
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Superfície de destaque: theme-aware (pedido do cliente) — clara no
+   modo claro, obsidian no escuro. Tokens --destaque-* fazem a troca. */
+.surface-destaque {
+  background-color: var(--destaque-bg);
+  color: var(--destaque-ink);
+}
+
+/* Combinada ao grid, o quadriculado aparece nos dois temas com a
+   linha do modo ativo (--destaque-grid-line — DESIGN.md regra 3). */
+.surface-destaque.grid-surface {
+  background-image: linear-gradient(var(--destaque-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--destaque-grid-line) 1px, transparent 1px);
+}
+
+/* Superfície escura constante: obsidian nos DOIS temas. Reservada
+   para superfícies escuras fixas futuras (ex.: tela de quiz);
+   nenhum uso na landing hoje. */
+.surface-obsidian {
+  background-color: var(--obsidian);
+  color: var(--text-on-dark);
+}
+
+/* Sobre obsidian fixo, o grid usa sempre a linha do tema escuro. */
+.surface-obsidian.grid-surface {
+  background-image: linear-gradient(var(--grid-line-dark) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line-dark) 1px, transparent 1px);
+}
+
+/* ============================================================
+   HERO MESH — gradiente aurora em roxos da marca (dois temas
+   via tokens --mesh-*). Blobs em pseudo-elemento com blur,
+   estático (pinta uma vez, sem custo contínuo).
+   ============================================================ */
+
+.hero-mesh {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--mesh-base);
+  color: var(--text-on-dark);
+}
+.hero-mesh::before {
+  content: "";
+  position: absolute;
+  inset: -22%;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 48% at 16% 16%, var(--mesh-a) 0%, transparent 100%),
+    radial-gradient(36% 44% at 84% 10%, var(--mesh-b) 0%, transparent 100%),
+    radial-gradient(46% 52% at 82% 78%, var(--mesh-c) 0%, transparent 100%),
+    radial-gradient(44% 50% at 12% 82%, var(--mesh-d) 0%, transparent 100%),
+    radial-gradient(58% 58% at 50% 48%, var(--mesh-e) 0%, transparent 100%);
+  filter: blur(72px);
+  transform: translateZ(0);
+}
+/* Véu que escurece o topo do mesh: garante AA do título branco */
+.hero-mesh::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--mesh-scrim) 0%, transparent 62%);
+}
+
+/* Foco visível precisa contrastar com o mesh roxo */
+.hero-mesh :focus-visible,
+.nav-topo :focus-visible {
+  outline-color: var(--text-on-dark);
+}
+
+/* Moldura do preview do app (cantos superiores 24px são exceção
+   documentada do template; sombra elevada e suave) */
+.app-preview-frame {
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -18px 60px -24px rgba(11, 18, 21, 0.45);
+}
+
+/* ============================================================
+   BOTÕES — cantos 12px, peso 500 (DESIGN.md)
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--radius);
+  padding: 12px 26px;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 200ms ease,
+    background-color 200ms ease;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Principal: verde só em ação. Um por tela. */
+.btn-verde {
+  background: var(--verde-4k);
+  color: var(--verde-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-verde:hover {
+    box-shadow: 0 8px 28px -6px rgba(56, 227, 88, 0.45);
+    transform: translateY(-1px);
+  }
+}
+
+/* Marca: ação secundária forte */
+.btn-roxo {
+  background: var(--roxo-4k);
+  color: var(--text-on-dark);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-roxo:hover {
+    box-shadow: 0 8px 28px -8px var(--roxo-4k);
+    transform: translateY(-1px);
+  }
+}
+
+/* Contorno: ação terciária */
+.btn-contorno {
+  background: transparent;
+  color: var(--roxo-4k);
+  border: 1.5px solid var(--roxo-4k);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn-contorno:hover {
+    background: var(--surface-alt);
+  }
+}
+
+/* ============================================================
+   PILLS DO HERO — exceção documentada de raio: os dois CTAs do
+   hero seguem o template do cliente (pill). Todo o resto do
+   sistema permanece em 12px.
+   ============================================================ */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  border-radius: 999px;
+  padding: 11px 24px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    box-shadow 200ms ease,
+    background-color 200ms ease;
+}
+.pill:active {
+  transform: scale(0.97);
+}
+
+/* Ação principal: único verde da tela */
+.pill-verde {
+  background: var(--verde-4k);
+  color: var(--verde-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pill-verde:hover {
+    box-shadow: 0 8px 28px -6px rgba(56, 227, 88, 0.45);
+    transform: translateY(-1px);
+  }
+}
+
+/* Secundário: vidro translúcido sobre o mesh */
+.pill-glass {
+  background: var(--glass-bg);
+  color: var(--text-on-dark);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+@media (hover: hover) and (pointer: fine) {
+  .pill-glass:hover {
+    background: var(--glass-hover);
+    transform: translateY(-1px);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .pill-glass {
+    background: var(--obsidian);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+
+.nav-blur {
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Estado "no topo": transparente sobre o mesh do hero,
+   itens em branco (o mesh é escuro/roxo nos dois temas). */
+.nav-topo {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-color: transparent;
+}
+.nav-topo :is(a, button) {
+  color: var(--text-on-dark);
+  border-color: var(--glass-border);
+}
+@media (hover: hover) and (pointer: fine) {
+  .nav-topo :is(a, button):hover {
+    background: var(--glass-bg);
+  }
+}
+
+/* Páginas de leitura (ex.: política de privacidade): não há hero mesh
+   escuro atrás da navbar, então o estado "no topo" transparente com
+   itens brancos ficaria ilegível sobre o fundo claro. Escopo via :has
+   no wrapper .pagina-leitura — a navbar em si não muda. */
+body:has(.pagina-leitura) .nav-topo {
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: var(--border);
+}
+body:has(.pagina-leitura) .nav-topo :is(a, button) {
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+@media (hover: hover) and (pointer: fine) {
+  body:has(.pagina-leitura) .nav-topo :is(a, button):hover {
+    background: var(--surface-alt);
+  }
+}
+body:has(.pagina-leitura) .nav-topo .text-on-dark {
+  color: var(--text-primary);
+}
+body:has(.pagina-leitura) .nav-topo :focus-visible {
+  outline-color: var(--roxo-4k);
+}
+
+/* ============================================================
+   TOGGLE DE TEMA — morfação lua↔sol num único SVG.
+   O disco central muda de escala, o recorte da máscara desliza
+   para formar o crescente e os raios giram/escalam com opacity.
+   Estado dirigido por [data-theme]; sob reduced-motion a troca
+   é instantânea (transições ficam fora do bloco no-preference).
+   ============================================================ */
+
+.theme-toggle-icon .ttg-nucleo,
+.theme-toggle-icon .ttg-recorte,
+.theme-toggle-icon .ttg-raios {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* Claro mostra a LUA: disco cheio + recorte em crescente, raios recolhidos */
+.theme-toggle-icon .ttg-nucleo {
+  transform: scale(1.9);
+}
+.theme-toggle-icon .ttg-recorte {
+  transform: translate(0, 0);
+}
+.theme-toggle-icon .ttg-raios {
+  opacity: 0;
+  transform: rotate(-45deg) scale(0.62);
+}
+
+/* Escuro mostra o SOL: disco pequeno, recorte fora do quadro, raios abertos */
+[data-theme="dark"] .theme-toggle-icon .ttg-nucleo {
+  transform: scale(1);
+}
+[data-theme="dark"] .theme-toggle-icon .ttg-recorte {
+  transform: translate(7px, -9px);
+}
+[data-theme="dark"] .theme-toggle-icon .ttg-raios {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .theme-toggle-icon .ttg-nucleo,
+  .theme-toggle-icon .ttg-recorte {
+    transition: transform 350ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .theme-toggle-icon .ttg-raios {
+    transition:
+      transform 350ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 220ms ease;
+  }
+}
+
+/* ============================================================
+   CARROSSEL DE DEPOIMENTOS (Shorts 9:16, scroll-snap)
+   ============================================================ */
+
+.carrossel-track {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+.carrossel-track::-webkit-scrollbar {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .carrossel-track {
+    scroll-behavior: auto;
+  }
+}
+
+/* Card de vídeo: cantos 12px, sombra suave tingida no roxo da marca */
+.card-depoimento {
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: 0 18px 44px -24px color-mix(in srgb, var(--roxo-4k) 45%, transparent);
+}
+
+/* Véu inferior do facade: ancora o botão de play em qualquer thumbnail */
+.card-depoimento-veu {
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--obsidian) 45%, transparent) 0%,
+    transparent 45%
+  );
+}
+
+/* ============================================================
+   ANIMAÇÃO DE ENTRADA (IntersectionObserver adiciona .is-visible)
+   ============================================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 500ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .btn,
+  .btn:active,
+  .pill,
+  .pill:active {
+    transition: none;
+    transform: none;
+  }
+}

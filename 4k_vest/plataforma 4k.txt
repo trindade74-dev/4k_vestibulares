@@ -1,0 +1,13 @@
+ideias do projeto
+
+adicionar um recurso do aluno fazer um simulado com um banco de questões para verificar seu desempenho em cada matéria e fazer um gráfico radar pra definir qual matéria ele devia dar mais atenção e onde ele esta bem (segundo o resultado das atividades e simulados)
+
+adicionar um "duolingo" na plataforma que irá enviar um quiz diário pro aluno -> assim que abrir a aplicação vai aparecer, será possível sair do quiz
+adicionar seção quiz e sessão simulado dentro da aplicação
+
+dashboard sobre o desempenho do aluno na plataforma -> abertura para o professor adicionar observações sobre o aluno
+
+CRM de funil de leads, categorizar leads quentes frios...
+
+vender automação em n8n a parte para automação do funil de leads + whatsapp
+
