@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.7",
     "@tabler/icons-react": "^3.44.0",
     "next": "16.2.10",
     "react": "19.2.4",

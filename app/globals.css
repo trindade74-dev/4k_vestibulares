@@ -519,6 +519,69 @@ body:has(.pagina-leitura) .nav-topo :focus-visible {
 }
 
 /* ============================================================
+   FORMULÁRIOS DE AUTENTICAÇÃO — inputs e caixas de feedback.
+   Telas de formulário: SEM grid quadriculado (DESIGN.md).
+   ============================================================ */
+
+.input-4k {
+  width: 100%;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-size: 1rem; /* 16px: evita auto-zoom do iOS */
+  line-height: 1.4;
+  transition: border-color 200ms ease;
+}
+.input-4k::placeholder {
+  color: var(--text-secondary);
+}
+.input-4k:focus-visible {
+  border-color: var(--roxo-4k);
+  border-radius: var(--radius); /* mantém 12px sobre o reset global de foco */
+}
+
+/* Caixa "revisar" (erros e avisos): tokens --revisar-* */
+.caixa-revisar {
+  border-radius: var(--radius);
+  border: 1px solid var(--revisar-border);
+  background: var(--revisar-bg);
+  color: var(--revisar-text);
+  padding: 12px 14px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Caixa "acerto" (sucesso): tokens --acerto-* — verde só em acerto */
+.caixa-acerto {
+  border-radius: var(--radius);
+  border: 1px solid var(--acerto-border);
+  background: var(--acerto-bg);
+  color: var(--acerto-text);
+  padding: 12px 14px;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Troca de modo do form de login: fade curto, sem exagero */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-modo {
+    animation: fadeModo 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  @keyframes fadeModo {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ============================================================
    CARROSSEL DE DEPOIMENTOS (Shorts 9:16, scroll-snap)
    ============================================================ */
 

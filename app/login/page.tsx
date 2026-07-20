@@ -1,46 +1,46 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { IconArrowLeft } from "@tabler/icons-react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
-  title: "Acesso à plataforma — 4K Vestibulares",
+  title: "Entrar — 4K Vestibulares",
   description:
-    "Ambiente do aluno e do professor da Plataforma 4K Vestibulares. Em construção.",
+    "Acesse a Plataforma 4K Vestibulares: entre com sua conta, crie um cadastro ou recupere sua senha.",
 };
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ perfil?: string }>;
+  searchParams: Promise<{ erro?: string }>;
 }) {
-  const { perfil } = await searchParams;
-  const titulo =
-    perfil === "professor" ? "Ambiente do Professor" : "Ambiente do Aluno";
+  const { erro } = await searchParams;
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center px-4 py-12">
-      <div className="w-full max-w-sm rounded-xl border border-border bg-surface p-8 text-center">
+    <main className="relative flex min-h-dvh flex-col items-center justify-center bg-bg px-4 py-20">
+      <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 rounded-xl px-2 py-2 text-sm font-medium text-muted transition-colors hover:text-ink"
+        >
+          <IconArrowLeft size={16} aria-hidden />
+          Voltar ao site
+        </Link>
+        <ThemeToggle />
+      </div>
+
+      <div className="w-full max-w-sm rounded-xl border border-border bg-surface p-6 sm:p-8">
         <Image
           src="/4k-logo.svg"
           alt="4K Vestibulares"
-          width={56}
-          height={56}
+          width={52}
+          height={52}
           priority
-          className="mx-auto"
+          className="mx-auto mb-6"
         />
-        <h1 className="mt-5 text-2xl font-semibold tracking-tight text-ink">
-          {titulo}
-        </h1>
-        <p className="mt-2 inline-block rounded-xl border border-[var(--revisar-border)] bg-[var(--revisar-bg)] px-3 py-1 text-sm font-medium text-[var(--revisar-text)]">
-          Ambiente em construção
-        </p>
-        <p className="mt-4 text-sm text-muted">
-          O acesso de alunos e professores chega em breve. Enquanto isso, fale
-          com a gente pela página inicial.
-        </p>
-        <Link href="/" className="btn btn-contorno mt-6 w-full">
-          Voltar ao início
-        </Link>
+        <LoginForm linkInvalido={erro === "link-invalido"} />
       </div>
     </main>
   );
