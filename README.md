@@ -32,19 +32,24 @@ As mesmas variáveis precisam existir também nas Environment Variables do proje
 
 | Caminho | O que é |
 |---|---|
-| `app/` | Rotas: landing (`/`), `/login`, `/redefinir-senha`, `/aluno`, `/professor` (stubs), `/auth/confirm`, `/politica-de-privacidade` |
+| `app/` | Rotas: landing (`/`), `/login`, `/redefinir-senha`, `/auth/confirm`, `/politica-de-privacidade`, `/aluno` + `/aluno/quiz`, `/professor` (stub) |
 | `components/landing/` | Seções da landing (hero, prova social, método, resultados, depoimentos, suporte, footer) |
+| `components/aluno/` | Dashboard, radar de desempenho, quiz e navegação do ambiente do aluno |
 | `components/` | Navbar, toggle de tema, Reveal (animação de entrada) |
-| `lib/supabase/` | Clients Supabase (browser, server, proxy) |
+| `lib/supabase/` | Clients Supabase (browser, server, proxy) tipados com `database.types.ts` |
 | `lib/auth/actions.ts` | Server actions de autenticação (entrar, cadastrar, recuperar senha, sair) |
+| `lib/aluno/` | Camada de dados do aluno (queries, server actions, tipos, ícones de matéria) |
 | `proxy.ts` | Proteção de rotas (convenção do Next 16, substitui `middleware.ts`) |
 | `app/globals.css` | Design tokens (única área com hex permitido) |
 | `4k_vest/DESIGN.md` | Design system — consultar antes de qualquer tela nova |
+
+> **Segurança (gabarito):** as questões chegam ao cliente via RPC `quiz_do_dia_seguro` **sem** a coluna `gabarito`; a correção e o gabarito só saem do banco pela função `responder_quiz`, no servidor, **após** o aluno responder. Nenhuma tela recebe o gabarito antecipadamente.
 
 ## Fases
 
 - [x] **Fase 0** — Seed do banco (Supabase)
 - [x] **Fase 1** — Landing page
 - [x] **Fase 2** — Login/Cadastro (Supabase Auth)
-- [ ] **Fase 3** — Ambiente do aluno (quiz diário, simulados, radar de desempenho, monitorias, redação)
+- [x] **Fase 3** — Ambiente do aluno: dashboard, quiz diário (correção server-side), streak e radar de desempenho
+- [ ] **Fase 3b** — Simulados, monitorias e redação (adiado)
 - [ ] **Fase 4** — Ambiente do professor (frequência, item analysis, correção de redação)
