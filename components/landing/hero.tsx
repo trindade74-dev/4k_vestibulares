@@ -1,11 +1,14 @@
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { Reveal } from "@/components/reveal";
 import { AppPreview } from "@/components/landing/app-preview";
+import { HeroMeshLayer } from "@/components/landing/hero-mesh-layer";
+import { HeroPreviewParallax } from "@/components/landing/hero-preview-parallax";
 import { MATRICULA_URL, WHATSAPP_URL } from "@/lib/links";
 
 export function Hero() {
   return (
     <section className="hero-mesh">
+      <HeroMeshLayer />
       {/* pt compensa a navbar fixa (h-16) */}
       <div className="relative mx-auto flex max-w-6xl flex-col items-center px-4 pt-28 text-center md:px-8 md:pt-36">
         <Reveal>
@@ -42,7 +45,9 @@ export function Hero() {
           delay={180}
           className="-mb-4 mt-14 w-full max-w-4xl sm:-mb-5 md:mt-20"
         >
-          <AppPreview />
+          <HeroPreviewParallax>
+            <AppPreview />
+          </HeroPreviewParallax>
         </Reveal>
       </div>
     </section>

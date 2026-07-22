@@ -16,7 +16,8 @@ import {
   responder,
 } from "@/lib/aluno/actions";
 import { iconeDaMateria } from "@/lib/aluno/materia-icones";
-import type { QuestaoSegura } from "@/lib/aluno/tipos";
+import type { QuestaoSegura, TipoQuestao } from "@/lib/aluno/tipos";
+import { QuestaoView } from "@/components/aluno/questao-view";
 
 gsap.registerPlugin(useGSAP);
 
@@ -277,42 +278,27 @@ export function QuizRunner({
             </div>
           </div>
 
-          {/* Enunciado (texto de estudo: superfície limpa, sem grid) */}
-          <p className="mt-4 text-base leading-relaxed text-ink">
-            {questaoAtual.enunciado}
-          </p>
-
-          {/* Alternativas */}
-          <div
-            role="radiogroup"
-            aria-label="Alternativas"
-            className="mt-5 flex flex-col gap-2.5"
-          >
-            {questaoAtual.alternativas.map((alt) => {
-              const estado = classeAlternativa(alt.id, escolha, resultadoAtual);
-              const ehFeedback = fase === "feedback";
-              const correta = resultadoAtual?.gabarito === alt.id;
-              return (
-                <button
-                  key={alt.id}
-                  type="button"
-                  role="radio"
-                  aria-checked={escolha === alt.id}
-                  disabled={ehFeedback || pendente}
-                  onClick={() => setEscolha(alt.id)}
-                  className={`${correta ? "alt-correta " : ""}flex items-start gap-3 rounded-xl border p-3.5 text-left transition-colors ${estado.classe}`}
-                >
-                  <span
-                    className={`flex size-7 shrink-0 items-center justify-center rounded-lg text-sm font-bold uppercase ${estado.badge}`}
-                  >
-                    {estado.icone ?? alt.id}
-                  </span>
-                  <span className="pt-0.5 text-sm leading-relaxed">
-                    {alt.texto}
-                  </span>
-                </button>
-              );
-            })}
+          {/* Questão (contexto + enunciado + alternativas ou Certo/Errado) */}
+          <div className="mt-4">
+            <QuestaoView
+              contexto={questaoAtual.contexto}
+              tipo_questao={questaoAtual.tipo_questao}
+              enunciado={questaoAtual.enunciado}
+              alternativas={questaoAtual.alternativas}
+              escolha={escolha}
+              onEscolha={fase === "respondendo" ? setEscolha : undefined}
+              desabilitado={pendente}
+              modo={fase === "feedback" ? "revisao" : "respondendo"}
+              resultado={
+                resultadoAtual
+                  ? {
+                      gabarito: resultadoAtual.gabarito,
+                      resposta_aluno: resultadoAtual.escolha,
+                      acertou: resultadoAtual.acertou,
+                    }
+                  : undefined
+              }
+            />
           </div>
 
           {erro && (
@@ -336,7 +322,10 @@ export function QuizRunner({
               )}
               {resultadoAtual.acertou
                 ? "Acertou! Resposta correta."
-                : `Resposta correta: alternativa ${resultadoAtual.gabarito.toUpperCase()}.`}
+                : `Resposta correta: ${rotuloGabarito(
+                    questaoAtual.tipo_questao,
+                    resultadoAtual.gabarito,
+                  )}.`}
             </p>
           )}
 
@@ -377,48 +366,10 @@ function Casca({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Classes da alternativa conforme fase e resultado (verde só no acerto). */
-function classeAlternativa(
-  altId: string,
-  escolha: string | null,
-  resultado: Resultado | undefined,
-): { classe: string; badge: string; icone: React.ReactNode } {
-  // Feedback: destaca a correta; se errou, marca a escolhida como "revisar".
-  if (resultado) {
-    if (resultado.gabarito === altId) {
-      return {
-        classe:
-          "border-[var(--acerto-border)] bg-[var(--acerto-bg)] text-[var(--acerto-text)]",
-        badge: "bg-verde text-verde-ink",
-        icone: <IconCircleCheck className="size-4" stroke={2} />,
-      };
-    }
-    if (resultado.escolha === altId && !resultado.acertou) {
-      return {
-        classe:
-          "border-[var(--revisar-border)] bg-[var(--revisar-bg)] text-[var(--revisar-text)]",
-        badge: "bg-roxo text-on-dark",
-        icone: <IconArrowRight className="size-4" stroke={2} />,
-      };
-    }
-    return {
-      classe: "border-border bg-surface text-muted opacity-60",
-      badge: "bg-surface-alt text-muted",
-      icone: null,
-    };
+/** Rótulo legível do gabarito no banner de feedback. */
+function rotuloGabarito(tipo: TipoQuestao, gabarito: string): string {
+  if (tipo === "certo_errado") {
+    return gabarito === "c" ? "Certo" : "Errado";
   }
-
-  // Respondendo: seleção em roxo.
-  if (escolha === altId) {
-    return {
-      classe: "border-roxo bg-surface-alt text-ink",
-      badge: "bg-roxo text-on-dark",
-      icone: null,
-    };
-  }
-  return {
-    classe: "border-border bg-surface text-ink hover:border-roxo",
-    badge: "bg-surface-alt text-muted",
-    icone: null,
-  };
+  return `alternativa ${gabarito.toUpperCase()}`;
 }

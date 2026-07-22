@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { IconCircleCheck } from "@tabler/icons-react";
 import { Reveal } from "@/components/reveal";
+import { ResultadosImagemParallax } from "@/components/landing/resultados-imagem-parallax";
 
 const CONQUISTAS = [
   "Mais de 120 aprovados na UnB em 2025",
@@ -40,19 +41,21 @@ export function Resultados() {
         </div>
 
         <Reveal delay={120}>
-          <figure>
-            <Image
-              src="/images/imagem02.png"
-              alt="Turma de aprovados da 4K com o nome do curso escrito nos braços em comemoração"
-              width={676}
-              height={412}
-              sizes="(min-width: 1024px) 520px, 90vw"
-              className="w-full rounded-xl border border-[var(--destaque-border)] object-cover"
-            />
-            <figcaption className="mt-3 text-sm text-destaque-muted">
-              Aprovados da turma 2025 no dia do resultado da UnB.
-            </figcaption>
-          </figure>
+          <ResultadosImagemParallax>
+            <figure>
+              <Image
+                src="/images/imagem02.png"
+                alt="Turma de aprovados da 4K com o nome do curso escrito nos braços em comemoração"
+                width={676}
+                height={412}
+                sizes="(min-width: 1024px) 520px, 90vw"
+                className="w-full rounded-xl border border-[var(--destaque-border)] object-cover"
+              />
+              <figcaption className="mt-3 text-sm text-destaque-muted">
+                Aprovados da turma 2025 no dia do resultado da UnB.
+              </figcaption>
+            </figure>
+          </ResultadosImagemParallax>
         </Reveal>
       </div>
     </section>

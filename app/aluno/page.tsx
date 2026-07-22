@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { IconFlame } from "@tabler/icons-react";
+import { IconChartRadar, IconChevronRight, IconFlame } from "@tabler/icons-react";
 import { createClient } from "@/lib/supabase/server";
 import { buscarDesempenho, buscarStreak } from "@/lib/aluno/queries";
 import { iconeDaMateria } from "@/lib/aluno/materia-icones";
 import { Entrada } from "@/components/aluno/entrada";
-import { RadarDesempenho } from "@/components/aluno/radar-desempenho";
+import { CabecalhoScroll } from "@/components/aluno/cabecalho-scroll";
+import { BarraProgresso } from "@/components/aluno/barra-progresso";
 
 export const metadata: Metadata = {
   title: "Ambiente do aluno — 4K Vestibulares",
@@ -76,16 +77,18 @@ export default async function AlunoPage() {
     <main id="conteudo" className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10">
       <Entrada className="flex flex-col gap-6">
         {/* Saudação */}
-        <header data-entrada>
-          <p className="text-sm font-medium text-muted">Plataforma 4K</p>
-          <h1 className="titulo-impacto mt-1 text-3xl text-ink sm:text-4xl">
-            {saudacaoBrasilia()}, <span className="text-roxo">{primeiroNome}</span>
-          </h1>
-          <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">
-            Seu quiz diário está pronto. Mantenha a sequência e acompanhe seu
-            radar de desempenho.
-          </p>
-        </header>
+        <CabecalhoScroll>
+          <header data-entrada>
+            <p className="text-sm font-medium text-muted">Plataforma 4K</p>
+            <h1 className="titulo-impacto mt-1 text-3xl text-ink sm:text-4xl">
+              {saudacaoBrasilia()}, <span className="text-roxo">{primeiroNome}</span>
+            </h1>
+            <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">
+              Seu quiz diário está pronto. Mantenha a sequência e acompanhe seu
+              radar de desempenho.
+            </p>
+          </header>
+        </CabecalhoScroll>
 
         {/* Streak + CTA */}
         <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
@@ -141,39 +144,29 @@ export default async function AlunoPage() {
           </section>
         </div>
 
-        {/* Desempenho */}
-        <section
-          id="desempenho"
+        {/* Desempenho — resumo com link para a área própria (radar mora lá) */}
+        <Link
+          href="/aluno/desempenho"
           data-entrada
-          aria-labelledby="titulo-desempenho"
-          className="rounded-xl border border-border bg-surface p-5 sm:p-6"
+          aria-label="Ver desempenho por matéria"
+          className="group flex items-center gap-4 rounded-xl border border-border bg-surface p-5 transition-colors hover:border-roxo"
         >
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-8">
-            <div className="mx-auto aspect-square w-full max-w-[300px] sm:mx-0 sm:max-w-[280px]">
-              <RadarDesempenho valores={desempenho} />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h2
-                id="titulo-desempenho"
-                className="text-lg font-semibold text-ink"
-              >
-                Desempenho por matéria
-              </h2>
-              <p className="mt-1 text-sm leading-relaxed text-muted">
-                Cada eixo é uma matéria; quanto mais longe do centro, maior seu
-                percentual de acerto.
-              </p>
-              {/* Lista textual acessível */}
-              <ul className="sr-only">
-                {desempenho.map((m) => (
-                  <li key={m.materia_id}>
-                    {m.materia_nome}: {Math.round(m.percentual)}%
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface-alt text-roxo">
+            <IconChartRadar className="size-6" stroke={1.75} />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-ink">
+              Desempenho por matéria
+            </p>
+            <p className="mt-0.5 text-sm leading-relaxed text-muted">
+              Veja seu radar de acertos e onde focar os estudos.
+            </p>
           </div>
-        </section>
+          <IconChevronRight
+            className="size-5 shrink-0 text-muted transition-transform group-hover:translate-x-0.5"
+            stroke={1.75}
+          />
+        </Link>
 
         {/* Cards de matéria */}
         <section aria-label="Matérias" data-entrada>
@@ -194,12 +187,7 @@ export default async function AlunoPage() {
                     {materia.materia_nome}
                   </p>
                   <p className="text-xs text-destaque-muted">{pct}% de acerto</p>
-                  <div className="mt-2.5 h-1.5 rounded-full bg-[var(--destaque-track)]">
-                    <div
-                      className="h-full rounded-full bg-verde"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
+                  <BarraProgresso percentual={pct} />
                 </div>
               );
             })}

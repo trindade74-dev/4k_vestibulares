@@ -4,6 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   IconChartRadar,
+  IconClipboardText,
+  IconHistory,
   IconHome,
   IconLogout,
   IconTargetArrow,
@@ -14,32 +16,59 @@ import { sair } from "@/lib/auth/actions";
 type ItemNav = {
   href: string;
   rotulo: string;
+  /** Rótulo curto para a barra inferior do mobile (5 itens). */
+  rotuloCurto: string;
   Icone: typeof IconHome;
   /** Segmento cujo prefixo marca o item como ativo. */
   segmento: string;
 };
 
 const ITENS: ItemNav[] = [
-  { href: "/aluno", rotulo: "Início", Icone: IconHome, segmento: "/aluno" },
+  {
+    href: "/aluno",
+    rotulo: "Início",
+    rotuloCurto: "Início",
+    Icone: IconHome,
+    segmento: "/aluno",
+  },
   {
     href: "/aluno/quiz",
     rotulo: "Quiz",
+    rotuloCurto: "Quiz",
     Icone: IconTargetArrow,
     segmento: "/aluno/quiz",
   },
   {
-    href: "/aluno#desempenho",
+    href: "/aluno/simulados",
+    rotulo: "Simulados",
+    rotuloCurto: "Simulados",
+    Icone: IconClipboardText,
+    segmento: "/aluno/simulados",
+  },
+  {
+    href: "/aluno/quizzes",
+    rotulo: "Quizzes",
+    rotuloCurto: "Quizzes",
+    Icone: IconHistory,
+    segmento: "/aluno/quizzes",
+  },
+  {
+    href: "/aluno/desempenho",
     rotulo: "Desempenho",
+    rotuloCurto: "Radar",
     Icone: IconChartRadar,
-    segmento: "#desempenho",
+    segmento: "/aluno/desempenho",
   },
 ];
 
-/** Marca ativo por segmento de rota (o link de âncora nunca vira "ativo"). */
+/**
+ * Marca ativo por segmento — casa exato ou subrota (`seg/…`), evitando que
+ * "/aluno/quiz" acenda em "/aluno/quizzes" e que "/aluno" acenda em tudo.
+ */
 function ehAtivo(pathname: string, item: ItemNav): boolean {
-  if (item.segmento.startsWith("#")) return false;
-  if (item.segmento === "/aluno") return pathname === "/aluno";
-  return pathname.startsWith(item.segmento);
+  const seg = item.segmento;
+  if (seg === "/aluno") return pathname === "/aluno";
+  return pathname === seg || pathname.startsWith(`${seg}/`);
 }
 
 function LogoMarca() {
@@ -135,12 +164,12 @@ export function NavAluno() {
               key={item.rotulo}
               href={item.href}
               aria-current={ativo ? "page" : undefined}
-              className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors ${
+              className={`flex flex-1 flex-col items-center gap-1 px-0.5 py-2.5 text-[10px] font-medium leading-none transition-colors ${
                 ativo ? "text-roxo" : "text-muted"
               }`}
             >
               <item.Icone className="size-6" stroke={1.75} />
-              {item.rotulo}
+              <span className="max-w-full truncate">{item.rotuloCurto}</span>
             </Link>
           );
         })}

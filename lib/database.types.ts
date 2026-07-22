@@ -43,6 +43,7 @@ export type Database = {
           alternativas: Json
           assunto: string | null
           ativa: boolean
+          contexto: string | null
           criado_em: string
           dificuldade: number
           enunciado: string
@@ -51,11 +52,13 @@ export type Database = {
           materia_id: string
           origem: string | null
           quiz_rapido: boolean
+          tipo_questao: string
         }
         Insert: {
           alternativas: Json
           assunto?: string | null
           ativa?: boolean
+          contexto?: string | null
           criado_em?: string
           dificuldade?: number
           enunciado: string
@@ -64,11 +67,13 @@ export type Database = {
           materia_id: string
           origem?: string | null
           quiz_rapido?: boolean
+          tipo_questao?: string
         }
         Update: {
           alternativas?: Json
           assunto?: string | null
           ativa?: boolean
+          contexto?: string | null
           criado_em?: string
           dificuldade?: number
           enunciado?: string
@@ -77,6 +82,7 @@ export type Database = {
           materia_id?: string
           origem?: string | null
           quiz_rapido?: boolean
+          tipo_questao?: string
         }
         Relationships: [
           {
@@ -136,6 +142,64 @@ export type Database = {
             columns: ["questao_id"]
             isOneToOne: false
             referencedRelation: "questoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recursos: {
+        Row: {
+          aluno_id: string
+          criado_em: string
+          id: string
+          questao_id: string
+          respondido_em: string | null
+          resposta_professor: string | null
+          status: string
+          tentativa_id: string | null
+          texto: string
+        }
+        Insert: {
+          aluno_id: string
+          criado_em?: string
+          id?: string
+          questao_id: string
+          respondido_em?: string | null
+          resposta_professor?: string | null
+          status?: string
+          tentativa_id?: string | null
+          texto: string
+        }
+        Update: {
+          aluno_id?: string
+          criado_em?: string
+          id?: string
+          questao_id?: string
+          respondido_em?: string | null
+          resposta_professor?: string | null
+          status?: string
+          tentativa_id?: string | null
+          texto?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recursos_aluno_id_fkey"
+            columns: ["aluno_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recursos_questao_id_fkey"
+            columns: ["questao_id"]
+            isOneToOne: false
+            referencedRelation: "questoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "recursos_tentativa_id_fkey"
+            columns: ["tentativa_id"]
+            isOneToOne: false
+            referencedRelation: "tentativas"
             referencedColumns: ["id"]
           },
         ]
@@ -363,6 +427,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      finalizar_simulado: {
+        Args: { p_tentativa_id: string }
+        Returns: {
+          acertou: boolean
+          alternativas: Json
+          contexto: string
+          enunciado: string
+          gabarito: string
+          materia_id: string
+          materia_nome: string
+          ordem: number
+          questao_id: string
+          resposta_aluno: string
+          tipo_questao: string
+        }[]
+      }
+      iniciar_simulado: { Args: { p_simulado_id: string }; Returns: string }
       meu_desempenho: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -374,15 +455,54 @@ export type Database = {
           total: number
         }[]
       }
+      meu_historico_quiz: {
+        Args: { p_limite?: number }
+        Returns: {
+          acertou: boolean
+          id: string
+          materia_cor: string
+          materia_nome: string
+          respondido_em: string
+        }[]
+      }
       meu_streak: { Args: Record<PropertyKey, never>; Returns: number }
       meu_tipo: { Args: Record<PropertyKey, never>; Returns: string }
+      meus_simulados: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          acertos: number
+          descricao: string
+          finalizada: boolean
+          id: string
+          iniciados_na_semana: number
+          n_questoes: number
+          tentativa_id: string
+          titulo: string
+          total_respondido: number
+        }[]
+      }
       minha_turma: { Args: Record<PropertyKey, never>; Returns: string }
+      questoes_do_simulado: {
+        Args: { p_tentativa_id: string }
+        Returns: {
+          alternativas: Json
+          contexto: string
+          enunciado: string
+          id: string
+          materia_id: string
+          materia_nome: string
+          ordem: number
+          resposta_atual: string
+          tipo_questao: string
+        }[]
+      }
       quiz_do_dia: {
         Args: { p_limite?: number }
         Returns: {
           alternativas: Json
           assunto: string | null
           ativa: boolean
+          contexto: string | null
           criado_em: string
           dificuldade: number
           enunciado: string
@@ -391,6 +511,7 @@ export type Database = {
           materia_id: string
           origem: string | null
           quiz_rapido: boolean
+          tipo_questao: string
         }[]
       }
       quiz_do_dia_seguro: {
@@ -398,12 +519,14 @@ export type Database = {
         Returns: {
           alternativas: Json
           assunto: string
+          contexto: string
           dificuldade: number
           enunciado: string
           id: string
           materia_cor: string
           materia_id: string
           materia_nome: string
+          tipo_questao: string
         }[]
       }
       responder_quiz: {
@@ -411,6 +534,30 @@ export type Database = {
         Returns: {
           acertou: boolean
           gabarito: string
+        }[]
+      }
+      responder_simulado: {
+        Args: {
+          p_questao_id: string
+          p_resposta: string
+          p_tentativa_id: string
+        }
+        Returns: undefined
+      }
+      resultado_simulado: {
+        Args: { p_tentativa_id: string }
+        Returns: {
+          acertou: boolean
+          alternativas: Json
+          contexto: string
+          enunciado: string
+          gabarito: string
+          materia_id: string
+          materia_nome: string
+          ordem: number
+          questao_id: string
+          resposta_aluno: string
+          tipo_questao: string
         }[]
       }
     }

@@ -1,11 +1,14 @@
 import type { Database } from "@/lib/database.types";
 
-/** Uma alternativa de questão — o que o aluno vê. Nunca inclui o gabarito. */
+/** Tipo de questão suportado. */
+export type TipoQuestao = "multipla_escolha" | "certo_errado";
+
+/** Uma alternativa — o que o aluno vê. Nunca inclui o gabarito. */
 export type Alternativa = { id: string; texto: string };
 
 /**
- * Questão entregue ao cliente pelo RPC `quiz_do_dia_seguro`.
- * NÃO contém o campo `gabarito` — de propósito.
+ * Questão do quiz diário entregue pelo RPC `quiz_do_dia_seguro`.
+ * NÃO contém `gabarito`. Para `certo_errado`, `alternativas` vem vazio.
  */
 export type QuestaoSegura = {
   id: string;
@@ -13,14 +16,68 @@ export type QuestaoSegura = {
   materia_nome: string;
   materia_cor: string | null;
   assunto: string | null;
+  tipo_questao: TipoQuestao;
+  contexto: string | null;
   enunciado: string;
   alternativas: Alternativa[];
   dificuldade: number;
 };
 
-/** Linha de desempenho por matéria (RPC `meu_desempenho`). */
+/** Questão de um simulado em andamento (sem gabarito), com a resposta já salva. */
+export type QuestaoSimulado = {
+  id: string;
+  materia_id: string;
+  materia_nome: string;
+  tipo_questao: TipoQuestao;
+  contexto: string | null;
+  enunciado: string;
+  alternativas: Alternativa[];
+  ordem: number;
+  resposta_atual: string | null;
+};
+
+/** Item do espelho (resultado) — já com gabarito, prova encerrada. */
+export type ItemEspelho = {
+  questao_id: string;
+  ordem: number;
+  materia_id: string;
+  materia_nome: string;
+  tipo_questao: TipoQuestao;
+  contexto: string | null;
+  enunciado: string;
+  alternativas: Alternativa[];
+  resposta_aluno: string | null;
+  acertou: boolean | null;
+  gabarito: string;
+};
+
+/** Linha da lista de simulados (RPC `meus_simulados`). */
+export type SimuladoLista =
+  Database["public"]["Functions"]["meus_simulados"]["Returns"][number];
+
+/** Linha de desempenho por matéria. */
 export type Desempenho =
   Database["public"]["Functions"]["meu_desempenho"]["Returns"][number];
 
+/** Registro do histórico de quiz. */
+export type HistoricoQuiz =
+  Database["public"]["Functions"]["meu_historico_quiz"]["Returns"][number];
+
 /** Resultado devolvido por `responder_quiz` APÓS o aluno responder. */
 export type ResultadoResposta = { acertou: boolean; gabarito: string };
+
+/** Converte a coluna `alternativas` (Json) para o tipo do cliente. */
+export function normalizarAlternativas(valor: unknown): Alternativa[] {
+  if (!Array.isArray(valor)) return [];
+  return valor
+    .filter(
+      (a): a is { id: unknown; texto: unknown } =>
+        typeof a === "object" && a !== null,
+    )
+    .map((a) => ({ id: String(a.id ?? ""), texto: String(a.texto ?? "") }));
+}
+
+/** Normaliza o campo tipo_questao vindo do banco. */
+export function normalizarTipo(valor: unknown): TipoQuestao {
+  return valor === "certo_errado" ? "certo_errado" : "multipla_escolha";
+}
