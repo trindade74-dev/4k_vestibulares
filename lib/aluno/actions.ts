@@ -1,7 +1,11 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { buscarQuestoes, buscarStreak } from "@/lib/aluno/queries";
+import {
+  buscarQuestoes,
+  buscarQuestoesMateria,
+  buscarStreak,
+} from "@/lib/aluno/queries";
 import type { QuestaoSegura, ResultadoResposta } from "@/lib/aluno/tipos";
 
 const RESPOSTAS_VALIDAS = new Set(["a", "b", "c", "d", "e"]);
@@ -29,6 +33,13 @@ export async function responder(
 /** Puxa mais questões avulsas (modo praticar). */
 export async function buscarMaisQuestoes(): Promise<QuestaoSegura[]> {
   return buscarQuestoes(true, 5);
+}
+
+/** Puxa mais questões avulsas de uma matéria específica (prática escopada). */
+export async function buscarMaisQuestoesMateria(
+  materiaId: string,
+): Promise<QuestaoSegura[]> {
+  return buscarQuestoesMateria(materiaId, 5);
 }
 
 /** Streak atualizado (para o resumo do quiz). */
@@ -107,4 +118,45 @@ export async function pedirRecurso(
   });
   if (error) return { erro: "Não foi possível enviar o recurso." };
   return { ok: true };
+}
+
+/** Reserva uma monitoria (checagem de vaga é atômica no banco). */
+export async function reservarMonitoria(
+  monitoriaId: string,
+): Promise<{ ok: true } | { erro: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("reservar_monitoria", {
+    p_monitoria_id: monitoriaId,
+  });
+  if (error) {
+    if (error.message.includes("lotada")) {
+      return { erro: "Essa monitoria já está lotada." };
+    }
+    if (error.message.includes("ja reservou")) {
+      return { erro: "Você já reservou essa monitoria." };
+    }
+    if (error.message.includes("nao esta mais disponivel")) {
+      return { erro: "Essa monitoria não está mais disponível." };
+    }
+    return { erro: "Não foi possível reservar a monitoria." };
+  }
+  return { ok: true };
+}
+
+/** Cancela uma reserva de monitoria do próprio aluno. */
+export async function cancelarReserva(
+  reservaId: string,
+): Promise<{ ok: true } | { erro: string }> {
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("cancelar_reserva", {
+    p_reserva_id: reservaId,
+  });
+  if (error) return { erro: "Não foi possível cancelar a reserva." };
+  return { ok: true };
+}
+
+/** Marca os avisos do aluno como vistos agora (zera o badge do sino). */
+export async function marcarAvisosVistos(): Promise<void> {
+  const supabase = await createClient();
+  await supabase.rpc("marcar_avisos_vistos");
 }

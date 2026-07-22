@@ -3,9 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 import {
   normalizarAlternativas,
   normalizarTipo,
+  type Aviso,
   type Desempenho,
   type HistoricoQuiz,
   type ItemEspelho,
+  type Material,
+  type MinhaMonitoria,
+  type MonitoriaDisponivel,
   type QuestaoSegura,
   type QuestaoSimulado,
   type SimuladoLista,
@@ -119,4 +123,100 @@ export async function buscarQuestoesSimulado(
     ordem: q.ordem,
     resposta_atual: q.resposta_atual,
   }));
+}
+
+/** Nome/cor de uma matéria pelo id (cabeçalho do hub de matéria). */
+export async function buscarMateria(
+  materiaId: string,
+): Promise<{ id: string; nome: string; cor: string | null } | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("materias")
+    .select("id, nome, cor")
+    .eq("id", materiaId)
+    .single();
+  if (error || !data) return null;
+  return data;
+}
+
+/** Questões de prática de uma matéria específica (mesma seleção do modo "praticar"). */
+export async function buscarQuestoesMateria(
+  materiaId: string,
+  limite = 5,
+): Promise<QuestaoSegura[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("quiz_do_dia_seguro", {
+    p_limite: limite,
+    p_praticar: true,
+    p_materia_id: materiaId,
+  });
+  if (error || !data) return [];
+  return data.map((q) => ({
+    id: q.id,
+    materia_id: q.materia_id,
+    materia_nome: q.materia_nome,
+    materia_cor: q.materia_cor,
+    assunto: q.assunto,
+    tipo_questao: normalizarTipo(q.tipo_questao),
+    contexto: q.contexto,
+    enunciado: q.enunciado,
+    alternativas: normalizarAlternativas(q.alternativas),
+    dificuldade: q.dificuldade,
+  }));
+}
+
+/** Material enviado pelo professor para uma matéria (RLS filtra publicado + turma). */
+export async function buscarMateriaisDaMateria(
+  materiaId: string,
+): Promise<Material[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("materiais")
+    .select("id, titulo, descricao, tipo, url, corpo, criado_em")
+    .eq("materia_id", materiaId)
+    .order("criado_em", { ascending: false });
+  if (error || !data) return [];
+  return data as Material[];
+}
+
+/** Monitorias abertas para uma matéria (ou gerais), com vagas calculadas. */
+export async function buscarMonitoriasDaMateria(
+  materiaId: string,
+): Promise<MonitoriaDisponivel[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("monitorias_da_materia", {
+    p_materia_id: materiaId,
+  });
+  if (error || !data) return [];
+  return data;
+}
+
+/** Reservas do aluno (histórico, opcionalmente filtrado por matéria). */
+export async function buscarMinhasMonitorias(
+  materiaId?: string,
+): Promise<MinhaMonitoria[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("minhas_monitorias", {
+    p_materia_id: materiaId ?? undefined,
+  });
+  if (error || !data) return [];
+  return data;
+}
+
+/** Avisos visíveis ao aluno (turma dele ou gerais), mais recentes primeiro. */
+export async function buscarAvisos(limite = 20): Promise<Aviso[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("meus_avisos", {
+    p_limite: limite,
+  });
+  if (error || !data) return [];
+  return data;
+}
+
+/** Contagem de avisos não lidos (badge do sino). */
+export async function buscarAvisosNaoLidos(): Promise<number> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("avisos_nao_lidos_count");
+  if (error || data == null) return 0;
+  return data;
 }

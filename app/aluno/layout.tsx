@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { buscarAvisosNaoLidos } from "@/lib/aluno/queries";
 import { NavAluno } from "@/components/aluno/nav-aluno";
 
 /**
@@ -17,12 +18,15 @@ export default async function AlunoLayout({
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: tipo } = await supabase.rpc("meu_tipo");
+  const [{ data: tipo }, naoLidos] = await Promise.all([
+    supabase.rpc("meu_tipo"),
+    buscarAvisosNaoLidos(),
+  ]);
   if (tipo === "professor") redirect("/professor");
 
   return (
     <div className="min-h-dvh bg-bg">
-      <NavAluno />
+      <NavAluno naoLidos={naoLidos} />
       {/* Reserva espaço p/ chrome fixo: barras no mobile, rail no desktop. */}
       <div className="pt-14 pb-24 md:pt-0 md:pb-0 md:pl-20">{children}</div>
     </div>

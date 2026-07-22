@@ -66,6 +66,28 @@ export type HistoricoQuiz =
 /** Resultado devolvido por `responder_quiz` APÓS o aluno responder. */
 export type ResultadoResposta = { acertou: boolean; gabarito: string };
 
+/** Material enviado pelo professor para uma matéria (select direto, RLS cuida do filtro). */
+export type Material = {
+  id: string;
+  titulo: string;
+  descricao: string | null;
+  tipo: "link" | "pdf" | "video" | "texto";
+  url: string | null;
+  corpo: string | null;
+  criado_em: string;
+};
+
+/** Monitoria disponível para reserva (RPC `monitorias_da_materia`). */
+export type MonitoriaDisponivel =
+  Database["public"]["Functions"]["monitorias_da_materia"]["Returns"][number];
+
+/** Reserva do aluno, com dados da monitoria (RPC `minhas_monitorias`). */
+export type MinhaMonitoria =
+  Database["public"]["Functions"]["minhas_monitorias"]["Returns"][number];
+
+/** Aviso/notificação (RPC `meus_avisos`). */
+export type Aviso = Database["public"]["Functions"]["meus_avisos"]["Returns"][number];
+
 /** Converte a coluna `alternativas` (Json) para o tipo do cliente. */
 export function normalizarAlternativas(valor: unknown): Alternativa[] {
   if (!Array.isArray(valor)) return [];

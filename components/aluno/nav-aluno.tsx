@@ -11,6 +11,7 @@ import {
   IconTargetArrow,
 } from "@tabler/icons-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { SinoAvisos } from "@/components/aluno/sino-avisos";
 import { sair } from "@/lib/auth/actions";
 
 type ItemNav = {
@@ -103,7 +104,7 @@ function BotaoSair({ compacto = false }: { compacto?: boolean }) {
   );
 }
 
-export function NavAluno() {
+export function NavAluno({ naoLidos }: { naoLidos: number }) {
   const pathname = usePathname();
 
   return (
@@ -136,6 +137,7 @@ export function NavAluno() {
         </nav>
 
         <div className="flex flex-col items-center gap-2">
+          <SinoAvisos naoLidos={naoLidos} />
           <ThemeToggle />
           <BotaoSair />
         </div>
@@ -147,6 +149,7 @@ export function NavAluno() {
           <LogoMarca />
         </Link>
         <div className="flex items-center gap-2">
+          <SinoAvisos naoLidos={naoLidos} />
           <ThemeToggle />
           <BotaoSair compacto />
         </div>

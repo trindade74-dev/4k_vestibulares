@@ -176,9 +176,10 @@ export default async function AlunoPage() {
               const Icone = iconeDaMateria(materia.materia_nome);
               const pct = Math.round(materia.percentual);
               return (
-                <div
+                <Link
                   key={materia.materia_id}
-                  className="surface-destaque grid-surface rounded-xl border border-[var(--destaque-border)] p-4"
+                  href={`/aluno/materias/${materia.materia_id}`}
+                  className="group surface-destaque grid-surface rounded-xl border border-[var(--destaque-border)] p-4 transition-colors hover:border-roxo"
                 >
                   <span className="flex size-10 items-center justify-center rounded-xl bg-roxo">
                     <Icone className="size-5 text-on-dark" stroke={1.75} />
@@ -188,7 +189,7 @@ export default async function AlunoPage() {
                   </p>
                   <p className="text-xs text-destaque-muted">{pct}% de acerto</p>
                   <BarraProgresso percentual={pct} />
-                </div>
+                </Link>
               );
             })}
           </div>

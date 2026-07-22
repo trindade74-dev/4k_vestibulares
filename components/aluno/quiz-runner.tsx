@@ -12,6 +12,7 @@ import {
 } from "@tabler/icons-react";
 import {
   buscarMaisQuestoes,
+  buscarMaisQuestoesMateria,
   buscarStreakAtual,
   responder,
 } from "@/lib/aluno/actions";
@@ -26,8 +27,14 @@ type Fase = "respondendo" | "feedback" | "resumo";
 
 export function QuizRunner({
   questoesIniciais,
+  materiaId,
+  tituloCena = "Quiz do dia",
 }: {
   questoesIniciais: QuestaoSegura[];
+  /** Escopa a prática a uma matéria (hub de matéria). Sem isso, é o quiz do dia geral. */
+  materiaId?: string;
+  /** Rótulo da faixa de progresso — nome da matéria quando escopado. */
+  tituloCena?: string;
 }) {
   const [questoes, setQuestoes] = useState<QuestaoSegura[]>(questoesIniciais);
   const [indice, setIndice] = useState(0);
@@ -120,7 +127,9 @@ export function QuizRunner({
     if (pendente) return;
     setSemMaisPratica(false);
     iniciar(async () => {
-      const novas = await buscarMaisQuestoes();
+      const novas = materiaId
+        ? await buscarMaisQuestoesMateria(materiaId)
+        : await buscarMaisQuestoes();
       if (novas.length === 0) {
         setSemMaisPratica(true);
         return;
@@ -143,15 +152,20 @@ export function QuizRunner({
             <IconCircleCheck className="size-7" stroke={1.75} />
           </span>
           <h2 className="titulo-impacto mt-4 text-2xl text-ink">
-            Quiz do dia concluído!
+            {materiaId
+              ? "Sem mais questões desta matéria por enquanto"
+              : "Quiz do dia concluído!"}
           </h2>
           <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-muted">
-            Você já respondeu o quiz de hoje. Quer continuar treinando com mais
-            questões?
+            {materiaId
+              ? "Você já praticou tudo disponível aqui. Volte mais tarde para novas questões."
+              : "Você já respondeu o quiz de hoje. Quer continuar treinando com mais questões?"}
           </p>
           {semMaisPratica ? (
             <p className="mt-6 text-sm font-medium text-muted">
-              Você já revisou tudo por hoje 🎉
+              {materiaId
+                ? "Você já revisou tudo por aqui 🎉"
+                : "Você já revisou tudo por hoje 🎉"}
             </p>
           ) : (
             <button
@@ -203,7 +217,9 @@ export function QuizRunner({
           <div className="mt-7 flex flex-col items-center gap-3">
             {semMaisPratica ? (
               <p className="text-sm font-medium text-muted">
-                Você já revisou tudo por hoje 🎉
+                {materiaId
+                  ? "Você já revisou tudo por aqui 🎉"
+                  : "Você já revisou tudo por hoje 🎉"}
               </p>
             ) : (
               <button
@@ -235,7 +251,7 @@ export function QuizRunner({
         <div className="flex items-center justify-between text-xs font-medium text-destaque-muted">
           <span className="inline-flex items-center gap-1.5">
             <IconTargetArrow className="size-4" stroke={1.75} />
-            Quiz do dia
+            {tituloCena}
           </span>
           <span>
             Questão {indice + 1} de {total}

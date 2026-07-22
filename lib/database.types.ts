@@ -14,6 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
+      avisos: {
+        Row: {
+          ativo: boolean
+          autor_id: string | null
+          corpo: string
+          id: string
+          importante: boolean
+          publicado_em: string
+          titulo: string
+          turma_id: string | null
+        }
+        Insert: {
+          ativo?: boolean
+          autor_id?: string | null
+          corpo: string
+          id?: string
+          importante?: boolean
+          publicado_em?: string
+          titulo: string
+          turma_id?: string | null
+        }
+        Update: {
+          ativo?: boolean
+          autor_id?: string | null
+          corpo?: string
+          id?: string
+          importante?: boolean
+          publicado_em?: string
+          titulo?: string
+          turma_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "avisos_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "avisos_turma_id_fkey"
+            columns: ["turma_id"]
+            isOneToOne: false
+            referencedRelation: "turmas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      materiais: {
+        Row: {
+          corpo: string | null
+          criado_em: string
+          descricao: string | null
+          id: string
+          materia_id: string
+          publicado: boolean
+          tipo: string
+          titulo: string
+          turma_id: string | null
+          url: string | null
+        }
+        Insert: {
+          corpo?: string | null
+          criado_em?: string
+          descricao?: string | null
+          id?: string
+          materia_id: string
+          publicado?: boolean
+          tipo?: string
+          titulo: string
+          turma_id?: string | null
+          url?: string | null
+        }
+        Update: {
+          corpo?: string | null
+          criado_em?: string
+          descricao?: string | null
+          id?: string
+          materia_id?: string
+          publicado?: boolean
+          tipo?: string
+          titulo?: string
+          turma_id?: string | null
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "materiais_materia_id_fkey"
+            columns: ["materia_id"]
+            isOneToOne: false
+            referencedRelation: "materias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "materiais_turma_id_fkey"
+            columns: ["turma_id"]
+            isOneToOne: false
+            referencedRelation: "turmas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       materias: {
         Row: {
           cor: string | null
@@ -37,6 +139,112 @@ export type Database = {
           ordem?: number
         }
         Relationships: []
+      }
+      monitoria_reservas: {
+        Row: {
+          aluno_id: string
+          criado_em: string
+          id: string
+          monitoria_id: string
+          status: string
+        }
+        Insert: {
+          aluno_id: string
+          criado_em?: string
+          id?: string
+          monitoria_id: string
+          status?: string
+        }
+        Update: {
+          aluno_id?: string
+          criado_em?: string
+          id?: string
+          monitoria_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monitoria_reservas_aluno_id_fkey"
+            columns: ["aluno_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "monitoria_reservas_monitoria_id_fkey"
+            columns: ["monitoria_id"]
+            isOneToOne: false
+            referencedRelation: "monitorias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      monitorias: {
+        Row: {
+          criado_em: string
+          data_hora: string
+          descricao: string | null
+          duracao_min: number
+          id: string
+          local_ou_link: string | null
+          materia_id: string | null
+          professor_id: string | null
+          status: string
+          titulo: string
+          turma_id: string | null
+          vagas: number
+        }
+        Insert: {
+          criado_em?: string
+          data_hora: string
+          descricao?: string | null
+          duracao_min?: number
+          id?: string
+          local_ou_link?: string | null
+          materia_id?: string | null
+          professor_id?: string | null
+          status?: string
+          titulo?: string
+          turma_id?: string | null
+          vagas?: number
+        }
+        Update: {
+          criado_em?: string
+          data_hora?: string
+          descricao?: string | null
+          duracao_min?: number
+          id?: string
+          local_ou_link?: string | null
+          materia_id?: string | null
+          professor_id?: string | null
+          status?: string
+          titulo?: string
+          turma_id?: string | null
+          vagas?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monitorias_materia_id_fkey"
+            columns: ["materia_id"]
+            isOneToOne: false
+            referencedRelation: "materias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "monitorias_professor_id_fkey"
+            columns: ["professor_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "monitorias_turma_id_fkey"
+            columns: ["turma_id"]
+            isOneToOne: false
+            referencedRelation: "turmas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       questoes: {
         Row: {
@@ -392,6 +600,7 @@ export type Database = {
       }
       usuarios: {
         Row: {
+          avisos_vistos_em: string | null
           criado_em: string
           id: string
           nome: string
@@ -399,6 +608,7 @@ export type Database = {
           turma_id: string | null
         }
         Insert: {
+          avisos_vistos_em?: string | null
           criado_em?: string
           id: string
           nome: string
@@ -406,6 +616,7 @@ export type Database = {
           turma_id?: string | null
         }
         Update: {
+          avisos_vistos_em?: string | null
           criado_em?: string
           id?: string
           nome?: string
@@ -427,6 +638,8 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      avisos_nao_lidos_count: { Args: never; Returns: number }
+      cancelar_reserva: { Args: { p_reserva_id: string }; Returns: undefined }
       finalizar_simulado: {
         Args: { p_tentativa_id: string }
         Returns: {
@@ -444,8 +657,9 @@ export type Database = {
         }[]
       }
       iniciar_simulado: { Args: { p_simulado_id: string }; Returns: string }
+      marcar_avisos_vistos: { Args: never; Returns: undefined }
       meu_desempenho: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           acertos: number
           materia_cor: string
@@ -465,10 +679,21 @@ export type Database = {
           respondido_em: string
         }[]
       }
-      meu_streak: { Args: Record<PropertyKey, never>; Returns: number }
-      meu_tipo: { Args: Record<PropertyKey, never>; Returns: string }
+      meu_streak: { Args: never; Returns: number }
+      meu_tipo: { Args: never; Returns: string }
+      meus_avisos: {
+        Args: { p_limite?: number }
+        Returns: {
+          corpo: string
+          id: string
+          importante: boolean
+          nao_lido: boolean
+          publicado_em: string
+          titulo: string
+        }[]
+      }
       meus_simulados: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           acertos: number
           descricao: string
@@ -481,7 +706,38 @@ export type Database = {
           total_respondido: number
         }[]
       }
-      minha_turma: { Args: Record<PropertyKey, never>; Returns: string }
+      minha_turma: { Args: never; Returns: string }
+      minhas_monitorias: {
+        Args: { p_materia_id?: string }
+        Returns: {
+          data_hora: string
+          descricao: string
+          duracao_min: number
+          local_ou_link: string
+          materia_id: string
+          monitoria_id: string
+          reserva_id: string
+          reserva_status: string
+          titulo: string
+        }[]
+      }
+      monitorias_da_materia: {
+        Args: { p_materia_id?: string }
+        Returns: {
+          data_hora: string
+          descricao: string
+          duracao_min: number
+          id: string
+          local_ou_link: string
+          materia_id: string
+          minha_reserva_id: string
+          minha_reserva_status: string
+          titulo: string
+          vagas: number
+          vagas_ocupadas: number
+          vagas_restantes: number
+        }[]
+      }
       questoes_do_simulado: {
         Args: { p_tentativa_id: string }
         Returns: {
@@ -513,9 +769,15 @@ export type Database = {
           quiz_rapido: boolean
           tipo_questao: string
         }[]
+        SetofOptions: {
+          from: "*"
+          to: "questoes"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       quiz_do_dia_seguro: {
-        Args: { p_limite?: number; p_praticar?: boolean }
+        Args: { p_limite?: number; p_materia_id?: string; p_praticar?: boolean }
         Returns: {
           alternativas: Json
           assunto: string
@@ -529,6 +791,7 @@ export type Database = {
           tipo_questao: string
         }[]
       }
+      reservar_monitoria: { Args: { p_monitoria_id: string }; Returns: string }
       responder_quiz: {
         Args: { p_questao_id: string; p_resposta: string }
         Returns: {
@@ -686,9 +949,3 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
     ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
-export const Constants = {
-  public: {
-    Enums: {},
-  },
-} as const
