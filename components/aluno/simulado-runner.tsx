@@ -18,7 +18,7 @@ import {
 import { iconeDaMateria } from "@/lib/aluno/materia-icones";
 import type { QuestaoSimulado } from "@/lib/aluno/tipos";
 import { QuestaoView } from "@/components/aluno/questao-view";
-import { ModalConfirmar } from "@/components/aluno/modal-confirmar";
+import { ModalConfirmar } from "@/components/modal-confirmar";
 
 gsap.registerPlugin(useGSAP);
 

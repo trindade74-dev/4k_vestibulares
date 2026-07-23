@@ -10,7 +10,7 @@ import {
   IconUsers,
 } from "@tabler/icons-react";
 import { cancelarReserva, reservarMonitoria } from "@/lib/aluno/actions";
-import { ModalConfirmar } from "@/components/aluno/modal-confirmar";
+import { ModalConfirmar } from "@/components/modal-confirmar";
 import type { MinhaMonitoria, MonitoriaDisponivel } from "@/lib/aluno/tipos";
 
 const FORMATADOR_DATA = new Intl.DateTimeFormat("pt-BR", {

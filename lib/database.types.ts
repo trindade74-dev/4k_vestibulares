@@ -21,6 +21,7 @@ export type Database = {
           corpo: string
           id: string
           importante: boolean
+          material_id: string | null
           publicado_em: string
           titulo: string
           turma_id: string | null
@@ -31,6 +32,7 @@ export type Database = {
           corpo: string
           id?: string
           importante?: boolean
+          material_id?: string | null
           publicado_em?: string
           titulo: string
           turma_id?: string | null
@@ -41,6 +43,7 @@ export type Database = {
           corpo?: string
           id?: string
           importante?: boolean
+          material_id?: string | null
           publicado_em?: string
           titulo?: string
           turma_id?: string | null
@@ -51,6 +54,13 @@ export type Database = {
             columns: ["autor_id"]
             isOneToOne: false
             referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "avisos_material_id_fkey"
+            columns: ["material_id"]
+            isOneToOne: false
+            referencedRelation: "materiais"
             referencedColumns: ["id"]
           },
           {
@@ -882,6 +892,15 @@ export type Database = {
         }[]
       }
       reservar_monitoria: { Args: { p_monitoria_id: string }; Returns: string }
+      reservas_da_monitoria: {
+        Args: { p_monitoria_id: string }
+        Returns: {
+          aluno_nome: string
+          criado_em: string
+          reserva_id: string
+          status: string
+        }[]
+      }
       responder_quiz: {
         Args: { p_questao_id: string; p_resposta: string }
         Returns: {
