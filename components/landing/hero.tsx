@@ -1,9 +1,10 @@
+import Link from "next/link";
 import { IconBrandWhatsapp } from "@tabler/icons-react";
 import { Reveal } from "@/components/reveal";
 import { AppPreview } from "@/components/landing/app-preview";
 import { HeroMeshLayer } from "@/components/landing/hero-mesh-layer";
 import { HeroPreviewParallax } from "@/components/landing/hero-preview-parallax";
-import { MATRICULA_URL, WHATSAPP_URL } from "@/lib/links";
+import { WHATSAPP_URL } from "@/lib/links";
 
 export function Hero() {
   return (
@@ -20,14 +21,9 @@ export function Hero() {
 
         <Reveal delay={100}>
           <div className="mt-8 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
-            <a
-              href={MATRICULA_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pill pill-verde w-full sm:w-auto"
-            >
+            <Link href="/matricula" className="pill pill-verde w-full sm:w-auto">
               Matricular-se
-            </a>
+            </Link>
             <a
               href={WHATSAPP_URL}
               target="_blank"

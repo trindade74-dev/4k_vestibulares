@@ -1,7 +1,12 @@
-export const WHATSAPP_URL =
-  "https://wa.me/556195632944?text=Ol%C3%A1%2C%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es";
+export const WHATSAPP_NUMERO = "556195632944";
 
-export const MATRICULA_URL =
-  "https://wa.me/556195632944?text=Ol%C3%A1%2C%20quero%20me%20matricular%20na%204K";
+export const WHATSAPP_URL = linkWhatsApp(
+  "Olá, gostaria de mais informações",
+);
 
 export const MAPS_URL = "https://maps.app.goo.gl/Y948wXvZxcvgdm2EA";
+
+/** Monta um link wa.me com texto pré-preenchido (sempre URL-encoded). */
+export function linkWhatsApp(texto: string): string {
+  return `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(texto)}`;
+}

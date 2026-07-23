@@ -62,6 +62,75 @@ export type Database = {
           },
         ]
       }
+      inscricoes: {
+        Row: {
+          aceite_lgpd: boolean
+          aceite_lgpd_em: string
+          como_conheceu: string
+          como_conheceu_outro: string | null
+          criado_em: string
+          curso_outro: string | null
+          curso_pretendido: string
+          data_nascimento: string
+          email: string
+          endereco: string
+          escola_origem: string
+          id: string
+          ja_fez_cursinho: boolean
+          nome: string
+          serie_status: string
+          status: string
+          telefone: string
+          turno_desejado: string
+          vestibular_outro: string | null
+          vestibulares_alvo: string[]
+        }
+        Insert: {
+          aceite_lgpd: boolean
+          aceite_lgpd_em?: string
+          como_conheceu: string
+          como_conheceu_outro?: string | null
+          criado_em?: string
+          curso_outro?: string | null
+          curso_pretendido: string
+          data_nascimento: string
+          email: string
+          endereco: string
+          escola_origem: string
+          id?: string
+          ja_fez_cursinho: boolean
+          nome: string
+          serie_status: string
+          status?: string
+          telefone: string
+          turno_desejado: string
+          vestibular_outro?: string | null
+          vestibulares_alvo: string[]
+        }
+        Update: {
+          aceite_lgpd?: boolean
+          aceite_lgpd_em?: string
+          como_conheceu?: string
+          como_conheceu_outro?: string | null
+          criado_em?: string
+          curso_outro?: string | null
+          curso_pretendido?: string
+          data_nascimento?: string
+          email?: string
+          endereco?: string
+          escola_origem?: string
+          id?: string
+          ja_fez_cursinho?: boolean
+          nome?: string
+          serie_status?: string
+          status?: string
+          telefone?: string
+          turno_desejado?: string
+          vestibular_outro?: string | null
+          vestibulares_alvo?: string[]
+        }
+        Relationships: []
+      }
       materiais: {
         Row: {
           corpo: string | null
@@ -640,6 +709,27 @@ export type Database = {
     Functions: {
       avisos_nao_lidos_count: { Args: never; Returns: number }
       cancelar_reserva: { Args: { p_reserva_id: string }; Returns: undefined }
+      enviar_inscricao: {
+        Args: {
+          p_aceite_lgpd: boolean
+          p_como_conheceu: string
+          p_como_conheceu_outro: string
+          p_curso_outro: string
+          p_curso_pretendido: string
+          p_data_nascimento: string
+          p_email: string
+          p_endereco: string
+          p_escola_origem: string
+          p_ja_fez_cursinho: boolean
+          p_nome: string
+          p_serie_status: string
+          p_telefone: string
+          p_turno_desejado: string
+          p_vestibular_outro: string
+          p_vestibulares_alvo: string[]
+        }
+        Returns: undefined
+      }
       finalizar_simulado: {
         Args: { p_tentativa_id: string }
         Returns: {
